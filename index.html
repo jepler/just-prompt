@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="wordlist.js"></script>
+</head>
+<body style="background: black; color: #888">
+    <canvas id="c" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black"></canvas>
+    <div id="b" style="cursor: pointer; position: fixed; top: 0; left: 0; font-size: 7vw;">↻</div>
+<script>
+var word;
+
+var mm
+var do_layout = function() {
+    var canvas = document.getElementById("c");
+    canvas.width = canvas.clientWidth
+    canvas.height = canvas.clientHeight
+    var ctx = canvas.getContext("2d");
+    var ww = canvas.width, hh = canvas.height
+    ctx.font = "30px Arial Bold";
+    ctx.fillStyle = "#ccc";
+    var measure = ctx.measureText(word)
+    mm = measure
+    ctx.translate(ww/2, hh/2)
+    if(ww < hh) {
+        ctx.rotate(Math.PI / 2)
+        hh = canvas.width
+        ww = canvas.height
+    }
+    var scale = ww / measure.width * .95
+    ctx.scale(scale, scale)
+    ctx.translate(-measure.width / 2 + measure.actualBoundingBoxLeft, (measure.actualBoundingBoxAscent - measure.actualBoundingBoxDescent)/2)
+    ctx.fillText(word, 1, 1)
+}
+var new_word = function() {
+    word = words[0|(Math.random()*words.length)]
+    console.log(word)
+    do_layout();
+}
+new_word()
+window.addEventListener('resize', function(event) { do_layout() })
+document.getElementById('b').addEventListener('click', function(event) { new_word() })
+</script>
+</body>
